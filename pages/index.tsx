@@ -1,51 +1,45 @@
 import Head from 'next/head';
-import { useAuth } from '../lib/auth';
-import styles from '../styles/Home.module.css';
+import Link from 'next/link';
+import { useAuth } from '@/lib/auth';
+import { Logo } from '@/styles/icons';
+import { Button, Flex, Container } from '@chakra-ui/react';
 
 export default function Home() {
   const auth = useAuth();
 
   return (
-    <div className={styles.container}>
+    <Flex width="90%" m="0 auto" textAlign="center" align="center" h="100vh">
       <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
+        <title>Fast Feedback</title>
       </Head>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>FastFeedback </h1>
+      <Container centerContent>
+        <Logo boxSize="16" />
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <h1>{auth.user && auth.user.displayName}</h1>
-          <button
+        {!auth.user ? (
+          <Button
+            variant="ghost"
+            display="block"
             onClick={(e) => {
-              if (!auth.user && auth.signInWithGithub) {
+              // if (!auth.user && auth.signInWithGithub) {
+              if (auth.signInWithGithub) {
                 auth.signInWithGithub();
-              } else if (auth.user && auth.signout) {
-                auth.signout();
               }
+              // } else if (auth.user && auth.signout) {
+              //   auth.signout();
+              // }
             }}
           >
-            {!auth.user ? 'Sign In' : 'Sign Out0'}
-          </button>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
+            Sign In
+          </Button>
+        ) : (
+          <Link href="/dashboard">
+            <Button variant="ghost" display="block">
+              Go to Dashboard
+            </Button>
+          </Link>
+        )}
+      </Container>
+    </Flex>
   );
 }
