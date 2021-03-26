@@ -13,30 +13,32 @@ import {
   FormControl,
   FormLabel,
   Input,
-  useToast
+  useToast,
 } from '@chakra-ui/react';
 import { createSite } from '@/lib/db';
 import { useAuth } from '@/lib/auth';
+import { mutate } from 'swr';
+import sites from 'pages/api/sites';
 
-type Inputs = {
-  site: string;
+type InputData = {
+  name: string;
   url: string;
 };
 
-type RefReturn =
-  | string
-  | ((instance: HTMLInputElement | null) => void)
-  | React.RefObject<HTMLInputElement>
-  | null
-  | undefined;
+// type RefReturn =
+//   | string
+//   | ((instance: HTMLInputElement | null) => void)
+//   | React.RefObject<HTMLInputElement>
+//   | null
+//   | undefined;
 
-type InputProps = React.DetailedHTMLProps<
-  React.InputHTMLAttributes<HTMLInputElement>,
-  HTMLInputElement
-> & {
-  label: string;
-  register: ({ required }: { required?: boolean }) => RefReturn;
-};
+// type InputProps = React.DetailedHTMLProps<
+//   React.InputHTMLAttributes<HTMLInputElement>,
+//   HTMLInputElement
+// > & {
+//   label: string;
+//   register: ({ required }: { required?: boolean }) => RefReturn;
+// };
 
 const AddSiteModal = (props: { isFirst?: boolean }) => {
   const { isFirst } = props;
@@ -45,20 +47,32 @@ const AddSiteModal = (props: { isFirst?: boolean }) => {
   const auth = useAuth();
   const toast = useToast();
 
-  const { register, handleSubmit, watch, errors } = useForm<Inputs>();
-  const onSubmit = handleSubmit(({ site, url }) => {
-    createSite({
+  const { register, handleSubmit, watch, errors } = useForm<InputData>();
+  const onSubmit = handleSubmit(({ name, url }) => {
+    const newSite = {
       authorId: auth.user ? auth.user.uid : null,
       createdAt: new Date().toISOString(),
-      site,
-      url
-    });
+      name,
+      url,
+    };
+    mutate(
+      '/api/sites',
+      async (sites: []) => {
+        const res = await createSite(newSite);
+        const id = res.id;
+        const updatedSites = [...sites, { id, ...newSite }];
+
+        return updatedSites;
+      },
+      false
+    );
+
     toast({
       title: 'Success!',
       description: 'Website added succesfully',
       status: 'success',
       duration: 3000,
-      isClosable: true
+      isClosable: true,
     });
     onClose();
   });
@@ -88,7 +102,7 @@ const AddSiteModal = (props: { isFirst?: boolean }) => {
                 id="site-input"
                 ref={register({ required: true })}
                 placeholder="My site"
-                name="site"
+                name="name"
               />
             </FormControl>
 

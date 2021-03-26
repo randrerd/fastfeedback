@@ -1,18 +1,12 @@
+import { TFormattedUser } from './auth';
 import firebase from './firebase';
 
 const firestore = firebase.firestore();
 
-type TFormattedUser = {
-  uid: string;
-  email: string | null;
-  name: string | null;
-  provider: string | undefined;
-};
-
-type TSiteDetails = {
+type SiteDetails = {
   authorId: string | null;
   createdAt: string;
-  site: string;
+  name: string;
   url: string;
 };
 
@@ -23,7 +17,11 @@ const createUser: (uid: string, data: TFormattedUser) => void = (uid, data) => {
     .set({ ...data }, { merge: true });
 };
 
-const createSite: (data: TSiteDetails) => void = (data) => {
+const createSite: (
+  data: SiteDetails
+) => Promise<
+  firebase.firestore.DocumentReference<firebase.firestore.DocumentData>
+> = (data) => {
   return firestore.collection('sites').add(data);
 };
 

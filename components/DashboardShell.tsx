@@ -6,7 +6,7 @@ import {
   Avatar,
   Box,
   Heading,
-  Text
+  Text,
 } from '@chakra-ui/react';
 import { Logo } from '@/styles/icons';
 import { useAuth } from '@/lib/auth';
@@ -45,15 +45,17 @@ const DashboardShell = ({ children }: { children: JSX.Element }) => {
             justifyContent="flex-start"
             alignItems="center"
           >
-            <Link
-              onClick={() => {
-                if (auth.signout) {
-                  auth.signout();
-                }
-              }}
-            >
-              Sign Out
-            </Link>
+            {auth.user && (
+              <Link
+                onClick={() => {
+                  if (auth.signout) {
+                    auth.signout();
+                  }
+                }}
+              >
+                Sign Out
+              </Link>
+            )}
             <Avatar src={auth.user?.photoUrl ? auth.user.photoUrl : ''} />
           </Stack>
         </Flex>
@@ -65,9 +67,9 @@ const DashboardShell = ({ children }: { children: JSX.Element }) => {
               <Text color="gray.700">Sites</Text>
               <Heading>My Site</Heading>
             </Box>
-            <AddSiteModal />
+            {auth.user && <AddSiteModal />}
           </Flex>
-          <Box backgroundColor="#ffffff" pt="5em" pb="5em" mt="2em">
+          <Box backgroundColor="#ffffff" pb="5em" mt="2em">
             {children}
           </Box>
         </Box>

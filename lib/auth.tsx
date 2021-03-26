@@ -3,7 +3,7 @@ import firebase from './firebase';
 import 'firebase/auth';
 import { createUser } from './db';
 
-type TFormattedUser = {
+export type TFormattedUser = {
   uid: string;
   email: string | null;
   name: string | null;
@@ -74,12 +74,12 @@ function useProvideAuth() {
       email: user.email,
       name: user.displayName,
       provider: user.providerData[0]?.providerId,
-      photoUrl: user.photoURL
+      photoUrl: user.photoURL,
     };
   };
   return {
     user,
     signInWithGithub,
-    signout
+    signout,
   };
 }

@@ -2,20 +2,19 @@ import admin from 'firebase-admin';
 import 'firebase/auth';
 import 'firebase/firestore';
 
+const privateKey: string = !process.env.FIREBASE_PRIVATE_KEY
+  ? ''
+  : process.env.FIREBASE_PRIVATE_KEY;
+
 if (!admin.apps.length) {
   admin.initializeApp({
-    // credential: admin.credential.cert({
-    //   client_email: process.env.FIREBASE_CLIENT_EMAIL,
-    //   private_key: process.env.FIREBASE_PRIVATE_KEY,
-    //   project_id: 'your-project-id'
-    // }),
     credential: admin.credential.cert({
       clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      privateKey: process.env.FIREBASE_PRIVATE_KEY,
-      projectId: '"fast-feedback-a48a7'
+      privateKey: privateKey.replace(/\\n/g, '\n'),
+      projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
     }),
-    databaseURL: 'https://your-project-id.firebaseio.com'
+    databaseURL: 'https://fast-feedback-a48a7.firebaseio.com',
   });
 }
 
-export default admin.database();
+export default admin.firestore();
