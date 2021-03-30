@@ -18,7 +18,6 @@ import {
 import { createSite } from '@/lib/db';
 import { useAuth } from '@/lib/auth';
 import { mutate } from 'swr';
-import sites from 'pages/api/sites';
 
 type InputData = {
   name: string;

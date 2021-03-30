@@ -3,7 +3,8 @@ import firebase from './firebase';
 
 const firestore = firebase.firestore();
 
-type SiteDetails = {
+export type SiteDetails = {
+  id?: string;
   authorId: string | null;
   createdAt: string;
   name: string;
