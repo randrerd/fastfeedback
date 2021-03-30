@@ -25,21 +25,6 @@ type InputData = {
   url: string;
 };
 
-// type RefReturn =
-//   | string
-//   | ((instance: HTMLInputElement | null) => void)
-//   | React.RefObject<HTMLInputElement>
-//   | null
-//   | undefined;
-
-// type InputProps = React.DetailedHTMLProps<
-//   React.InputHTMLAttributes<HTMLInputElement>,
-//   HTMLInputElement
-// > & {
-//   label: string;
-//   register: ({ required }: { required?: boolean }) => RefReturn;
-// };
-
 const AddSiteModal = (props: { isFirst?: boolean }) => {
   const { isFirst } = props;
   const { isOpen, onOpen, onClose } = useDisclosure();
