@@ -74,12 +74,12 @@ function useProvideAuth() {
       email: user.email,
       name: user.displayName,
       provider: user.providerData[0]?.providerId,
-      photoUrl: user.photoURL,
+      photoUrl: user.photoURL
     };
   };
   return {
     user,
     signInWithGithub,
-    signout,
+    signout
   };
 }

@@ -1,4 +1,5 @@
 import { TFormattedUser } from './auth';
+import { FeedbackDetails } from './db-admin';
 import firebase from './firebase';
 
 const firestore = firebase.firestore();
@@ -26,4 +27,12 @@ const createSite: (
   return firestore.collection('sites').add(data);
 };
 
-export { createUser, createSite };
+const createFeedback: (
+  data: FeedbackDetails
+) => Promise<
+  firebase.firestore.DocumentReference<firebase.firestore.DocumentData>
+> = (data) => {
+  return firestore.collection('feedback').add(data);
+};
+
+export { createUser, createSite, createFeedback };

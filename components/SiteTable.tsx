@@ -2,6 +2,7 @@ import { Box, ChakraProps, Link, Skeleton, Text } from '@chakra-ui/react';
 import { format, parseISO } from 'date-fns';
 import { SiteData } from 'pages/api/sites';
 import { Table, Tr, Th, Td } from './Table';
+import NextLink from 'next/link';
 
 const SiteTable = ({ sites }: { sites: SiteData[] }) => {
   return (
@@ -26,7 +27,9 @@ const SiteTable = ({ sites }: { sites: SiteData[] }) => {
                 </Link>
               </Td>
               <Td>
-                <Link>View Feedback</Link>
+                <NextLink href="/p/[siteId]" as={`/p/${site.id}`} passHref>
+                  <Link>View Feedback</Link>
+                </NextLink>
               </Td>
               <Td>{format(parseISO(site.createdAt), 'PPP')}</Td>
             </Box>

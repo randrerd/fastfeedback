@@ -1,6 +1,6 @@
-
 import { NextApiRequest, NextApiResponse } from 'next';
 import db from '@/lib/firebase-admin';
+import { getAllSites } from '@/lib/db-admin';
 
 export type SiteData = {
   id?: string;
@@ -11,21 +11,11 @@ export type SiteData = {
 };
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  try {
-    const snapshot = await db.collection('sites').get();
+  const { sites, err } = await getAllSites();
 
-    const arr: SiteData[] = [];
-    snapshot.forEach((doc) => {
-      const data = doc.data() as SiteData;
-      const obj: SiteData = {
-        id: doc.id,
-        ...data,
-      };
-      arr.push(obj);
-    });
-    res.status(200);
-    res.send(arr);
-  } catch (err) {
-    console.log({ err });
+  if (err) {
+    res.status(500).json(err);
+  } else {
+    res.status(200).json(sites);
   }
 };
