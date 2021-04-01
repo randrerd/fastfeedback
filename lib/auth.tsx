@@ -9,6 +9,7 @@ export type TFormattedUser = {
   name: string | null;
   provider: string | undefined;
   photoUrl?: string | null;
+  token?: string;
 };
 
 interface IAuthContext {
@@ -45,21 +46,18 @@ function useProvideAuth() {
 
   useEffect(() => {
     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
-      // if (user) {
-      //   setUser(user);
-      // } else {
-      //   setUser(null);
-      // }
       handleUser(user);
     });
 
     return () => unsubscribe();
   }, []);
 
-  const handleUser = (rawUser: firebase.User | null) => {
+  const handleUser = async (rawUser: firebase.User | null) => {
     if (rawUser) {
-      const user = formatUser(rawUser);
-      createUser(user.uid, user);
+      const user = await formatUser(rawUser);
+      const { token, ...userWithoutToken } = user;
+      createUser(user.uid, userWithoutToken);
+
       setUser(user);
       return user;
     } else {
@@ -68,15 +66,18 @@ function useProvideAuth() {
     }
   };
 
-  const formatUser: (user: firebase.User) => TFormattedUser = (user) => {
+  const formatUser = async (user: firebase.User) => {
+    const token = await user.getIdToken();
     return {
       uid: user.uid,
       email: user.email,
       name: user.displayName,
       provider: user.providerData[0]?.providerId,
-      photoUrl: user.photoURL
+      photoUrl: user.photoURL,
+      token
     };
   };
+
   return {
     user,
     signInWithGithub,

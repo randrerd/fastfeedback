@@ -11,10 +11,13 @@ if (!admin.apps.length) {
     credential: admin.credential.cert({
       clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
       privateKey: privateKey.replace(/\\n/g, '\n'),
-      projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+      projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID
     }),
-    databaseURL: 'https://fast-feedback-a48a7.firebaseio.com',
+    databaseURL: 'https://fast-feedback-a48a7.firebaseio.com'
   });
 }
 
-export default admin.firestore();
+const auth = admin.auth();
+const firestore = admin.firestore();
+
+export { auth, firestore };

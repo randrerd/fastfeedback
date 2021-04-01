@@ -4,7 +4,9 @@ import { SiteData } from 'pages/api/sites';
 import { Table, Tr, Th, Td } from './Table';
 import NextLink from 'next/link';
 
-const SiteTable = ({ sites }: { sites: SiteData[] }) => {
+//const SiteTable = ({ sites }: { sites: SiteData[] }) => {
+const SiteTable = (props: { sites: SiteData[] }) => {
+  const { sites } = props;
   return (
     <Table>
       <thead>

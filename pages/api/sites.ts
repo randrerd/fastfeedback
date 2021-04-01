@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import db from '@/lib/firebase-admin';
-import { getAllSites } from '@/lib/db-admin';
+import { auth } from '@/lib/firebase-admin';
+import { getUserSites } from '@/lib/db-admin';
 
 export type SiteData = {
   id?: string;
@@ -11,11 +11,12 @@ export type SiteData = {
 };
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const { sites, err } = await getAllSites();
+  try {
+    const { uid } = await auth.verifyIdToken(req.headers.token as string);
+    const { sites } = await getUserSites(uid);
 
-  if (err) {
-    res.status(500).json(err);
-  } else {
     res.status(200).json(sites);
+  } catch (err) {
+    res.status(500).json({ err });
   }
 };

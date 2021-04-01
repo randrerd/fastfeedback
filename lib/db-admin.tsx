@@ -1,6 +1,6 @@
 import { compareDesc, parseISO } from 'date-fns';
 import { SiteDetails } from './db';
-import firebase from './firebase-admin';
+import { firestore } from './firebase-admin';
 
 export type FeedbackDetails = {
   id?: string;
@@ -16,7 +16,7 @@ export type FeedbackDetails = {
 
 const getAllFeedback = async (siteId: string) => {
   try {
-    const snapshot = await firebase
+    const snapshot = await firestore
       .collection('feedback')
       .where('siteId', '==', siteId)
       .get();
@@ -39,21 +39,34 @@ const getAllFeedback = async (siteId: string) => {
 };
 
 const getAllSites = async () => {
-  try {
-    const snapshot = await firebase.collection('sites').get();
+  const snapshot = await firestore.collection('sites').get();
 
-    const sites: SiteDetails[] = [];
+  const sites: SiteDetails[] = [];
 
-    snapshot.forEach((doc) => {
-      const data = doc.data() as SiteDetails;
+  snapshot.forEach((doc) => {
+    const data = doc.data() as SiteDetails;
 
-      sites.push({ id: doc.id, ...data });
-    });
+    sites.push({ id: doc.id, ...data });
+  });
 
-    return { sites };
-  } catch (err) {
-    return { err };
-  }
+  return { sites };
 };
 
-export { getAllFeedback, getAllSites };
+const getUserSites = async (uid: string) => {
+  const snapshot = await firestore
+    .collection('sites')
+    .where('authorId', '==', uid)
+    .get();
+
+  const data: { sites: SiteDetails[] } = { sites: [] };
+
+  snapshot.forEach((doc) => {
+    const current = doc.data() as SiteDetails;
+
+    data.sites.push({ id: doc.id, ...current });
+  });
+
+  return data;
+};
+
+export { getAllFeedback, getAllSites, getUserSites };

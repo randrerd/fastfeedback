@@ -65,7 +65,7 @@ const SiteFeedback = (props: { initialFeedback: FeedbackDetails[] }) => {
       <FormControl as="form" my={8} onSubmit={onSubmit}>
         <FormLabel htmlFor="comment">Comment</FormLabel>
         <Input ref={inputEl} type="text" id="comment" />
-        <Button mt={2} type="submit" fontWeight="medium">
+        <Button mt={2} type="submit" fontWeight="600">
           Add Comment
         </Button>
       </FormControl>
